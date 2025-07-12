@@ -3,9 +3,9 @@
 _Auto-generated on merge to main._
 
 ## Dev
-- [My Awesome Post](articles/dev/dev_post_1.md#this-is-a-test-1)
-  _Last updated: 2025-07-12 — "This post explains something really clever."_
 - [My Awesome Post 22](articles/dev/dev_post_2.md#this-is-a-test-2)
+  _Last updated: 2025-07-12 — "This post explains something really clever."_
+- [My Awesome Post](articles/dev/dev_post_1.md#this-is-a-test-1)
   _Last updated: 2025-07-12 — "This post explains something really clever."_
 
 ## Music
