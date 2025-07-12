@@ -1,4 +1,4 @@
-# NotaBlog
+# Blog
 
 _Auto-generated on merge to main._
 
@@ -9,7 +9,7 @@ _Auto-generated on merge to main._
   _Last updated: 2025-07-12 — "This post explains something really clever."_
 
 ## Music
-- [Music2](articles/music/Music2.md)
-  _Last updated: 2025-07-12_
 - [My music Post](articles/music/music_post_1.md#this-is-a-test)
   _Last updated: 2025-07-12 — "This post explains something really clever."_
+- [Music2](articles/music/Music2.md)
+  _Last updated: 2025-07-12_

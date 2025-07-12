@@ -82,7 +82,40 @@ def build_readme(categories):
 
     for category, files in sorted(categories.items()):
         lines.append(f"## {category.capitalize()}")
-        for file in sorted(files):
+
+        # Sort files by date from frontmatter
+        files_with_dates = []
+        files_without_dates = []
+
+        for file in files:
+            metadata, heading = parse_frontmatter_and_heading(file)
+            date_str = metadata.get("date")
+
+            if date_str:
+                try:
+                    # Try to parse the date
+                    if isinstance(date_str, str):
+                        # Handle various date formats
+                        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+                    else:
+                        # If it's already a datetime object
+                        date_obj = date_str
+                    files_with_dates.append((date_obj, file))
+                except (ValueError, TypeError):
+                    # If date parsing fails, treat as no date
+                    files_without_dates.append(file)
+            else:
+                files_without_dates.append(file)
+
+        # Sort files with dates by date (newest first)
+        files_with_dates.sort(key=lambda x: x[0], reverse=True)
+
+        # Combine sorted files with dates and files without dates (alphabetically sorted)
+        sorted_files = [file for date, file in files_with_dates] + sorted(
+            files_without_dates
+        )
+
+        for file in sorted_files:
             rel_path = Path(file)
             metadata, heading = parse_frontmatter_and_heading(file)
 
