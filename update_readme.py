@@ -1,5 +1,7 @@
 import os
 import subprocess
+import yaml
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -28,6 +30,39 @@ def get_git_last_modified(filepath):
         return "Unknown"
 
 
+def parse_frontmatter_and_heading(filepath):
+    with open(filepath, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    metadata = {}
+    content_start = 0
+
+    # Parse YAML frontmatter
+    if lines and lines[0].strip() == "---":
+        try:
+            end_idx = lines[1:].index("---\n") + 1
+            yaml_block = "".join(lines[1:end_idx])
+            metadata = yaml.safe_load(yaml_block) or {}
+            content_start = end_idx + 1
+        except (ValueError, yaml.YAMLError):
+            pass
+
+    # Find first heading after frontmatter
+    heading = None
+    for line in lines[content_start:]:
+        if line.strip().startswith("#"):
+            heading = line.strip().lstrip("#").strip()
+            break
+
+    return metadata, heading
+
+
+def slugify(text):
+    text = text.lower()
+    text = re.sub(r"[^\w\s-]", "", text)
+    return re.sub(r"[\s]+", "-", text)
+
+
 def group_by_category(files):
     categories = {}
     for file in files:
@@ -42,17 +77,29 @@ def group_by_category(files):
 
 def build_readme(categories):
     lines = []
-    lines.append("# NotaBlog\n")
+    lines.append("# Blog\n")
     lines.append("_Auto-generated on merge to main._\n")
 
     for category, files in sorted(categories.items()):
         lines.append(f"## {category.capitalize()}")
         for file in sorted(files):
             rel_path = Path(file)
-            name = rel_path.stem.replace("-", " ").replace("_", " ").capitalize()
-            link = rel_path.as_posix()
-            last_updated = get_git_last_modified(file)
-            lines.append(f"- [{name}]({link}) - _Last updated: {last_updated}_")
+            metadata, heading = parse_frontmatter_and_heading(file)
+
+            title = (
+                metadata.get("title")
+                or rel_path.stem.replace("-", " ").replace("_", " ").capitalize()
+            )
+            description = metadata.get("description", "")
+            anchor = f"#{slugify(heading)}" if heading else ""
+            link = f"{rel_path.as_posix()}{anchor}"
+            updated = get_git_last_modified(file)
+
+            lines.append(f"- [{title}]({link})")
+            lines.append(
+                f"  _Last updated: {updated}"
+                + (f' — "{description}"_' if description else "_")
+            )
         lines.append("")  # newline between categories
 
     return "\n".join(lines)
