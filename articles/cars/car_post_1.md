@@ -1,6 +1,6 @@
 ---
 title: "My car Post"
-description: "This post explains something really clever."
+description: "A scoobery into the doobery"
 date: 2025-06-12
 tags: [python, automation, github]
 draft: false
