@@ -1,4 +1,4 @@
-# Blog
+# NotaBlog
 
 _Auto-generated on merge to main._
 
