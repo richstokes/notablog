@@ -136,10 +136,10 @@ def build_readme(categories):
             link = f"{rel_path.as_posix()}{anchor}"
             updated = get_git_last_modified(file)
 
-            # Bold for title, italics for description
+            # Bold for title, italics for description directly under title
             lines.append(f"- [**{title}**]({link})")
             if description:
-                lines.append(f"  _{description}_  ")
+                lines.append(f"    _{description}_  ")
             lines.append(f"  <sub>Last updated: {updated}</sub>")
         lines.append("")  # newline between categories
         lines.append("---\n")  # horizontal rule separator
