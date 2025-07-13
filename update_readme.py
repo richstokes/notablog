@@ -80,8 +80,15 @@ def build_readme(categories):
     lines.append("# Blog\n")
     lines.append("_Just some thoughts._\n")
 
+    # Emoji mapping for categories (customize as needed)
+    category_emojis = {
+        "dev": "💻",
+        "music": "🎵",
+    }
+
     for category, files in sorted(categories.items()):
-        lines.append(f"## {category.capitalize()}")
+        emoji = category_emojis.get(category.lower(), "📂")
+        lines.append(f"## {emoji} {category.capitalize()}")
 
         # Sort files by date from frontmatter
         files_with_dates = []
@@ -128,11 +135,11 @@ def build_readme(categories):
             link = f"{rel_path.as_posix()}{anchor}"
             updated = get_git_last_modified(file)
 
-            lines.append(f"- [{title}]({link})")
-            lines.append(
-                f"  _Last updated: {updated}"
-                + (f' — "{description}"_' if description else "_")
-            )
+            # Bold for title, italics for description
+            lines.append(f"- [**{title}**]({link})")
+            if description:
+                lines.append(f"  _{description}_  ")
+            lines.append(f"  <sub>Last updated: {updated}</sub>")
         lines.append("")  # newline between categories
 
     return "\n".join(lines)
