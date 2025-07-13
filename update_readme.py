@@ -78,7 +78,7 @@ def group_by_category(files):
 def build_readme(categories):
     lines = []
     lines.append("# Blog\n")
-    lines.append("_Auto-generated on merge to main._\n")
+    lines.append("_Just some thoughts._\n")
 
     for category, files in sorted(categories.items()):
         lines.append(f"## {category.capitalize()}")
