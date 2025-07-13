@@ -23,7 +23,8 @@ _Just some thoughts._
 - [**My music Post**](articles/music/music_post_1.md#this-is-a-test)
   _This post explains something really clever._  
   <sub>Last updated: 2025-07-12</sub>
-- [**Music2**](articles/music/Music2.md)
+- [**My 2nd music post 222222**](articles/music/Music2.md)
+  _This post explains something really clever._  
   <sub>Last updated: 2025-07-12</sub>
 
 ---
