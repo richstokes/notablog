@@ -1,6 +1,6 @@
 # Blog
 
-_Auto-generated on merge to main._
+_Just some thoughts._
 
 ## Cars
 - [My car Post](articles/cars/car_post_1.md#this-is-a-car-test-1)
