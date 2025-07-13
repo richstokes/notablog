@@ -82,6 +82,7 @@ def build_readme(categories):
 
     # Emoji mapping for categories (customize as needed)
     category_emojis = {
+        "cars": "🏎️",
         "dev": "💻",
         "music": "🎵",
     }
@@ -141,6 +142,7 @@ def build_readme(categories):
                 lines.append(f"  _{description}_  ")
             lines.append(f"  <sub>Last updated: {updated}</sub>")
         lines.append("")  # newline between categories
+        lines.append("---\n")  # horizontal rule separator
 
     return "\n".join(lines)
 
