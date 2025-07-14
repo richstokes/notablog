@@ -2,7 +2,7 @@
 title: "Tart Cheatsheet"
 description: "Easy macOS VMs"
 date: 2025-07-13
-tags: [macos, vms]
+tags: [macos, vms, tart]
 ---
 
 ## Tart Cheatsheet
