@@ -13,7 +13,7 @@ _Easy macOS VMs_
 &nbsp;
 ## 🎸 Music
 - [**Recording Mac audio out**](articles/music/recording_mac_audio_output.md#scenario)<br>
-_Quick recording from logic+an audio source_  
+_How to record both your instrument and computer audio simultaneously_  
   <sub>Last updated: 2025-07-13</sub>
 
 ---
