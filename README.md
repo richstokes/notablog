@@ -1,6 +1,4 @@
-# Blog
-
-_Just some thoughts._
+## Definitely not a blog
 
 ## 💻 Dev
 - [**Tart Cheatsheet**](articles/dev/tart.md#tart-cheatsheet)<br>
