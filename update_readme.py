@@ -77,8 +77,8 @@ def group_by_category(files):
 
 def build_readme(categories):
     lines = []
-    lines.append("# Blog\n")
-    lines.append("_Just some thoughts._\n")
+    lines.append("## Definitely not a blog\n")
+    # lines.append("_Just some thoughts._\n")
 
     # Emoji mapping for categories (customize as needed)
     category_emojis = {
