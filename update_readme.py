@@ -84,7 +84,7 @@ def build_readme(categories):
     category_emojis = {
         "cars": "🏎️",
         "dev": "💻",
-        "music": "🎵",
+        "music": "🎸",
     }
 
     for category, files in sorted(categories.items()):
