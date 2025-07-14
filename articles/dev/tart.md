@@ -1,17 +1,32 @@
+---
+title: "Tart Cheatsheet"
+description: "Easy macOS VMs"
+date: 2025-07-13
+tags: [macos, vms]
+---
 
-> Tart Cheatsheet
+## Tart Cheatsheet
 
-### Install
+### Installation
+
+```sh
 brew install cirruslabs/cli/tart
+```
 
+### Pull an Image & Create a VM
 
-### Pull an image / create the VM
+```sh
 tart clone ghcr.io/cirruslabs/macos-tahoe-base:latest tahoe-base
+```
 
+### Launch VM & Mount Apps Folder (Read-Only)
 
-### Launch while mounting apps folder in VM
+```sh
 tart run --dir=MyApps:/Applications:ro tahoe-base
+```
 
+### Launch VM with Bridged Wi-Fi Networking
 
-### If you want it to share your wifi network
+```sh
 tart run --dir=MyApps:/Applications:ro --net-bridged=en0 tahoe-base
+```
