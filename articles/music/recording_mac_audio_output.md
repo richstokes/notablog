@@ -1,6 +1,6 @@
 ---
 title: "Recording Mac audio out"
-description: "Quick recording from logic+an audio source"
+description: "How to record both your instrument and computer audio simultaneously"
 date: 2025-07-12
 tags: [music, guitar, logic pro]
 draft: false
