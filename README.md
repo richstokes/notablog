@@ -10,8 +10,8 @@ _Easy macOS VMs_
 ---
 
 ## 🎵 Music
-- [**My music Post**](articles/music/music_post_1.md#this-is-a-test)<br>
-_This post explains something really clever._  
-  <sub>Last updated: 2025-07-12</sub>
+- [**Recording Mac audio out**](articles/music/recording_mac_audio_output.md#scenario)<br>
+_Quick recording on mac_  
+  <sub>Last updated: 2025-07-13</sub>
 
 ---
