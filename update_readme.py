@@ -143,6 +143,8 @@ def build_readme(categories):
             lines.append(f"  <sub>Last updated: {updated}</sub>")
         lines.append("")  # newline between categories
         lines.append("---\n")  # horizontal rule separator
+        lines.append("")  # newline after horizontal rule
+        lines.append("&nbsp;")  # non-breaking space for better formatting
 
     return "\n".join(lines)
 
