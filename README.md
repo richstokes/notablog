@@ -1,5 +1,7 @@
 ## Definitely not a blog
 
+_Please enjoy responsibly._
+
 ## 💻 Dev
 - [**Tart Cheatsheet**](articles/dev/tart.md#tart-cheatsheet)<br>
 _Easy macOS VMs_  
