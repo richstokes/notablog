@@ -1,3 +1,10 @@
+"""
+This script is auto-ran on commit and updates the README.md file
+to include all markdown files in the articles directory, grouped by category.
+It extracts metadata from the frontmatter and sorts articles by date.
+It also formats the README with links, titles, descriptions, and last updated dates.
+"""
+
 import os
 import subprocess
 import yaml
