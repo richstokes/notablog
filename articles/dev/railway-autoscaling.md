@@ -60,19 +60,16 @@ resp = httpx.post(
 )
 ```
 
-**Setting replicas:** `serviceInstanceUpdate` only writes config. It doesn't trigger actual scaling. For that, you need the two-step [staged changes](https://docs.railway.com/guides/staged-changes) flow that the dashboard uses internally:
+**Setting replicas:** `serviceInstanceUpdate` only writes config. It doesn't trigger actual scaling. For that, you need the [`environmentPatchCommit`](https://docs.railway.com/guides/staged-changes) mutation, which applies the change in a single call:
 
 ```python
-# Step 1: Stage the change
 _railway_request(
-    """mutation($eid: String!, $input: EnvironmentConfig!, $merge: Boolean) {
-        environmentStageChanges(environmentId: $eid, input: $input, merge: $merge) {
-            id
-        }
+    """mutation($eid: String!, $patch: EnvironmentConfig!) {
+        environmentPatchCommit(environmentId: $eid, patch: $patch)
     }""",
     {
         "eid": ENVIRONMENT_ID,
-        "input": {
+        "patch": {
             "services": {
                 SERVICE_ID: {
                     "deploy": {
@@ -83,16 +80,7 @@ _railway_request(
                 }
             }
         },
-        "merge": True,
     },
-)
-
-# Step 2: Commit (skipDeploys=true — scaling doesn't need a redeploy)
-_railway_request(
-    """mutation($eid: String!, $skipDeploys: Boolean) {
-        environmentPatchCommitStaged(environmentId: $eid, skipDeploys: $skipDeploys)
-    }""",
-    {"eid": ENVIRONMENT_ID, "skipDeploys": True},
 )
 ```
 
@@ -124,16 +112,7 @@ Every poll cycle (3 seconds), it counts pending and processing jobs (two cheap S
 
 ### Race Conditions with Multiple Replicas
 
-When you have 6 replicas running, all 6 are executing `check_and_scale` independently. They'll all compute the same desired count and try to set it simultaneously. This is fine because:
-
-1. The stage+commit flow is idempotent. Setting the same value twice is harmless.
-2. When two replicas race, the second one gets "No patch to apply" on commit. We just suppress that error:
-
-```python
-msgs = [e.get("message", "") for e in result["errors"]]
-if not all("No patch to apply" in m for m in msgs):
-    logger.warning(f"Railway API errors: {result['errors']}")
-```
+When you have 6 replicas running, all 6 are executing `check_and_scale` independently. They'll all compute the same desired count and try to set it simultaneously. This is fine because `environmentPatchCommit` is idempotent. Setting the same value twice is harmless, and each replica caches what it last set so it won't keep calling the API redundantly.
 
 ### Results
 
