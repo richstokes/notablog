@@ -7,7 +7,7 @@ tags: [railway, python, autoscaling, infrastructure]
 
 ## DIY Autoscaling on Railway with ~150 Lines of Python
 
-Railway doesn't have built-in horizontal autoscaling. You can manually set replica counts from the dashboard, but if your workload is bursty — quiet most of the time with occasional spikes — you're either paying for idle replicas or making users wait.
+Railway doesn't have built-in horizontal autoscaling. You can manually set replica counts from the dashboard, but if your workload is bursty (quiet most of the time with occasional spikes) you're either paying for idle replicas or making users wait.
 
 I wanted something simple: scale up when there's a backlog of jobs, scale back to one when the queue is empty. No Kubernetes, no external autoscaler service. Just the worker itself managing its own replicas.
 
@@ -38,7 +38,7 @@ else:
     desired = current  # hold steady
 ```
 
-- **More than 3 pending jobs?** Scale up — one replica per pending job, capped at 6.
+- **More than 3 pending jobs?** Scale up. One replica per pending job, capped at 6.
 - **Queue empty and nothing processing?** Scale down to 1. (The "nothing processing" check prevents killing replicas that are mid-job.)
 - **1-3 pending?** Hold steady. This avoids thrashing when jobs are trickling in at a normal rate.
 
@@ -60,7 +60,7 @@ resp = httpx.post(
 )
 ```
 
-**Setting replicas:** `serviceInstanceUpdate` only writes config — it doesn't trigger actual scaling. For that, you need the two-step [staged changes](https://docs.railway.com/guides/staged-changes) flow that the dashboard uses internally:
+**Setting replicas:** `serviceInstanceUpdate` only writes config. It doesn't trigger actual scaling. For that, you need the two-step [staged changes](https://docs.railway.com/guides/staged-changes) flow that the dashboard uses internally:
 
 ```python
 # Step 1: Stage the change
@@ -96,13 +96,13 @@ _railway_request(
 )
 ```
 
-You need three IDs — service, environment, and region — all available from the Railway console under your project and service settings.
+You need three IDs (service, environment, and region), all available from the Railway console under your project and service settings.
 
 **Reading the current replica count** turned out to be unreliable. The `numReplicas` field on `serviceInstance` is stale, and the environment patches API doesn't always reflect dashboard changes. The solution: don't read at all. Just track what you last set in memory and only write when the desired count changes.
 
 ### Integration
 
-The autoscaler runs inside the worker's existing poll loop — no separate process, no cron job:
+The autoscaler runs inside the worker's existing poll loop. No separate process, no cron job:
 
 ```python
 while True:
@@ -126,7 +126,7 @@ Every poll cycle (3 seconds), it counts pending and processing jobs (two cheap S
 
 When you have 6 replicas running, all 6 are executing `check_and_scale` independently. They'll all compute the same desired count and try to set it simultaneously. This is fine because:
 
-1. The stage+commit flow is idempotent — setting the same value twice is harmless.
+1. The stage+commit flow is idempotent. Setting the same value twice is harmless.
 2. When two replicas race, the second one gets "No patch to apply" on commit. We just suppress that error:
 
 ```python
@@ -156,13 +156,13 @@ It scaled to 6 within seconds, processed all 10 jobs across multiple workers in 
 
 ### What It Doesn't Handle
 
-- **Manual dashboard scaling** — if you manually set 6 replicas while the autoscaler is running, it won't notice (it tracks its own state, not Railway's). But it self-corrects on the next deploy, or as soon as the job queue state changes.
-- **Gradual scale-down** — it goes straight from N to 1 when the queue empties. A more sophisticated approach would step down gradually with a cooldown. In practice, Railway handles the replica termination gracefully enough that this hasn't been an issue.
+- **Manual dashboard scaling.** If you manually set 6 replicas while the autoscaler is running, it won't notice (it tracks its own state, not Railway's). It self-corrects on the next deploy, or as soon as the job queue state changes.
+- **Gradual scale-down.** It goes straight from N to 1 when the queue empties. You could step down gradually with a cooldown, but Railway handles replica termination gracefully enough that this hasn't been an issue.
 
 ### Takeaways
 
 The whole thing is about 150 lines of Python with no dependencies beyond `httpx` (which the worker already used). It piggybacks on the existing poll loop, uses the database as the source of truth for load, and only hits the Railway API when something actually needs to change.
 
-If your workload is bursty and you're on Railway, this approach gives you autoscaling without any external infrastructure. The key insight is that the workers themselves are the best place to make scaling decisions — they already know the queue depth and can manage their own replica count.
+If your workload is bursty and you're on Railway, this approach gives you autoscaling without any external infrastructure. The workers themselves are the best place to make scaling decisions. They already know the queue depth and can manage their own replica count.
 
-This was built for a background worker with a queryable job queue, which makes the scaling signal obvious. But the same pattern works for API servers and frontends — you'd just swap the scaling signal. Trigger off request latency, CPU usage, or request rate instead of queue depth. Railway exposes service metrics via the API, or you could track your own (e.g. a rolling average of response times). The staged changes mechanism is the same either way.
+This was built for a background worker with a queryable job queue, which makes the scaling signal obvious. But the same pattern works for API servers and frontends. You'd just swap the scaling signal: request latency, CPU usage, or request rate instead of queue depth. Railway exposes service metrics via the API, or you could track your own (e.g. a rolling average of response times). The staged changes mechanism is the same either way.
