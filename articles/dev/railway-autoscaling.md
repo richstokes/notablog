@@ -13,7 +13,7 @@ I wanted something simple: scale up when there's a backlog of jobs, scale back t
 
 ### The Setup
 
-The app is [ToneChef](https://tonechef.app), which generates camera recipes from reference photos using AI. The architecture is straightforward:
+The app is [ToneChef](https://tonechef.app), a project of mine which generates camera recipes from reference photos using AI. The architecture is straightforward:
 
 - **API server** — accepts jobs, manages auth/credits
 - **Worker** — polls a Postgres jobs table, processes one job at a time
