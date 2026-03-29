@@ -60,7 +60,7 @@ resp = httpx.post(
 )
 ```
 
-**Setting replicas:** The `numReplicas` field on `serviceInstanceUpdate` is deprecated in favour of `multiRegionConfig` (though it still appears in the [API docs](https://docs.railway.com/guides/manage-services) without a deprecation notice). Either way, `serviceInstanceUpdate` only writes config — it doesn't trigger actual scaling. For that, you need the two-step [staged changes](https://docs.railway.com/guides/staged-changes) flow that the dashboard uses internally:
+**Setting replicas:** `serviceInstanceUpdate` only writes config — it doesn't trigger actual scaling. For that, you need the two-step [staged changes](https://docs.railway.com/guides/staged-changes) flow that the dashboard uses internally:
 
 ```python
 # Step 1: Stage the change
@@ -96,7 +96,7 @@ _railway_request(
 )
 ```
 
-You need three IDs — service, environment, and region. I found the service and environment IDs from the Railway CLI config (`~/.railway/config.json`), and the region by inspecting recent environment patches via the API.
+You need three IDs — service, environment, and region — all available from the Railway console under your project and service settings.
 
 **Reading the current replica count** turned out to be unreliable. The `numReplicas` field on `serviceInstance` is stale, and the environment patches API doesn't always reflect dashboard changes. The solution: don't read at all. Just track what you last set in memory and only write when the desired count changes.
 
@@ -164,3 +164,5 @@ It scaled to 6 within seconds, processed all 10 jobs across multiple workers in 
 The whole thing is about 150 lines of Python with no dependencies beyond `httpx` (which the worker already used). It piggybacks on the existing poll loop, uses the database as the source of truth for load, and only hits the Railway API when something actually needs to change.
 
 If your workload is bursty and you're on Railway, this approach gives you autoscaling without any external infrastructure. The key insight is that the workers themselves are the best place to make scaling decisions — they already know the queue depth and can manage their own replica count.
+
+This was built for a background worker with a queryable job queue, which makes the scaling signal obvious. But the same pattern works for API servers and frontends — you'd just swap the scaling signal. Trigger off request latency, CPU usage, or request rate instead of queue depth. Railway exposes service metrics via the API, or you could track your own (e.g. a rolling average of response times). The staged changes mechanism is the same either way.
