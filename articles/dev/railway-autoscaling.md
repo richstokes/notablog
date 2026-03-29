@@ -98,7 +98,7 @@ _railway_request(
 
 You need three IDs (service, environment, and region), all available from the Railway console under your project and service settings.
 
-**Reading the current replica count** turned out to be unreliable. The `numReplicas` field on `serviceInstance` is stale, and the environment patches API doesn't always reflect dashboard changes. The solution: don't read at all. Just track what you last set in memory and only write when the desired count changes.
+**Reading the current replica count** is possible by scanning recent `environmentPatches` for the latest committed replica config, but it's an extra API call every cycle. Since the autoscaler is the only thing setting replicas, it's simpler to just track what you last set in memory and only write when the desired count changes.
 
 ### Integration
 
