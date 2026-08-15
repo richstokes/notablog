@@ -8,7 +8,7 @@ _Building a lightweight autoscaler that scales worker replicas based on job back
   <sub>Last updated: 2026-03-28</sub>
 - [**Tart Cheatsheet**](articles/dev/tart.md#tart-cheatsheet)<br>
 _Easy macOS VMs_  
-  <sub>Last updated: 2025-07-13</sub>
+  <sub>Last updated: 2026-08-15</sub>
 
 ---
 
