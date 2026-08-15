@@ -19,6 +19,14 @@ brew install cirruslabs/cli/tart
 tart clone ghcr.io/cirruslabs/macos-tahoe-base:latest tahoe-base
 ```
 
+To download the vanilla macOS Golden Gate image and name the VM `gg`:
+
+```sh
+tart clone ghcr.io/cirruslabs/macos-golden-gate-vanilla:latest gg
+```
+
+See Tart's [VM image documentation](https://tart.run/quick-start/#vm-images) for other available images.
+
 ### Launch VM & Mount Apps Folder (Read-Only)
 
 ```sh
